@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use DirectoryIterator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Symfony\Component\Finder\Tests\Iterator\Iterator;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -51,9 +53,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
-        Route::middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+        Route::group([
+            'middleware' => 'web',
+            'namespace'  => $this->namespace,
+        ], function () {
+            foreach (\File::allFiles(base_path() . '/routes/') as $partial) {
+                require $partial->getPathName();
+            }
+        });
     }
 
     /**
@@ -66,8 +73,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 }

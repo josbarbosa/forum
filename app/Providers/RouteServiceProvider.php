@@ -57,7 +57,7 @@ class RouteServiceProvider extends ServiceProvider
             'middleware' => 'web',
             'namespace'  => $this->namespace,
         ], function () {
-            foreach (\File::allFiles(base_path() . '/routes/') as $partial) {
+            foreach (\File::allFiles(base_path() . '/routes/web/') as $partial) {
                 require $partial->getPathName();
             }
         });
@@ -75,6 +75,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::prefix('api')
             ->middleware('api')
             ->namespace($this->namespace)
-            ->group(base_path('routes/api.php'));
+            ->group(base_path('routes/api/api.php'));
     }
 }

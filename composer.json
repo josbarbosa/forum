@@ -28,7 +28,8 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "files": ["tests/utilities/functions.php"]
     },
     "extra": {
         "laravel": {
@@ -48,11 +49,14 @@
             "@php artisan package:discover"
         ],
         "test" : [
-            "@php artisan migrate:refresh --database=mysql_test",
-            "@php artisan db:seed --database=mysql_test",
-            "phpdbg -qrr ./vendor/bin/phpunit --colors=always",
-            "@php artisan migrate:rollback --database=mysql_test"
-        ]
+            "@test-migrate",
+            "@test-seed",
+            "phpdbg -qrr ./vendor/bin/phpunit --colors=always $PHPUNIT_OPTIONS",
+            "@test-rollback"
+        ],
+        "test-migrate": "@php artisan migrate:refresh --database=mysql_test --env=testing",
+        "test-seed": "@php artisan db:seed --database=mysql_test --env=testing",
+        "test-rollback": "@php artisan migrate:rollback --database=mysql_test --env=testing"
     },
     "config": {
         "preferred-install": "dist",

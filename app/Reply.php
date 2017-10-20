@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Reply extends Model
 {
+    protected $guarded = [];
     /**
      * @return BelongsTo
      * When the method name is not expected by laravel

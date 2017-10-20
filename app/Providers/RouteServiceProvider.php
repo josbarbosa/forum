@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use DirectoryIterator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Symfony\Component\Finder\Tests\Iterator\Iterator;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -58,6 +56,19 @@ class RouteServiceProvider extends ServiceProvider
             'namespace'  => $this->namespace,
         ], function () {
             foreach (\File::allFiles(base_path() . '/routes/web/') as $partial) {
+                /**
+                 * ========
+                 * Using partial route files for better organization
+                 * ========
+                 *
+                 * Registering partial route files fires a bug when unit tests are running and require_once is used
+                 * With every new test, a completely new application instance and thus router is used
+                 * So using require_once the routes are no longer registered, the first test will succeed but the next ones will fail
+                 * The main routes files are included but partials are not, since PHP correctly considers them already included
+                 * Is important not define any functions/classes in these partial files
+                 * All route files declared as partials are inside a specific folder "web" to avoid any issues
+                 *
+                 */
                 require $partial->getPathName();
             }
         });

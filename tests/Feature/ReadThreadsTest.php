@@ -32,7 +32,7 @@ class ReadThreadsTest extends TestCase
     /** @test */
     public function a_user_can_view_all_threads()
     {
-        $response = $this->get('/threads');
+        $response = $this->get(route('threads'));
 
         //Test if page return OK status
         $response->assertStatus(200);
@@ -44,7 +44,7 @@ class ReadThreadsTest extends TestCase
     public function a_user_can_read_a_single_thread()
     {
         //Test if user can access thread
-        $response = $this->get('/threads/' . $this->thread->id);
+        $response = $this->get(route('show_thread', $this->thread->id));
         $response->assertSee($this->thread->title);
     }
 
@@ -57,10 +57,9 @@ class ReadThreadsTest extends TestCase
         ]);
 
         //When we visit a thread page
-        $response = $this->get('/threads/' . $this->thread->id);
+        $response = $this->get(route('show_thread', $this->thread->id));
 
         //Then we should see the replies
         $response->assertSee($reply->body);
     }
-
 }

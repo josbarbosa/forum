@@ -1,11 +1,16 @@
 <?php
 
-function create($class, $attributes=[])
+function create($class, int $quantity = 1, array $attributes=[])
 {
-    return factory($class)->create($attributes);
+    return $quantity <= 1 ?
+        factory($class)->create($attributes) :
+        factory($class, $quantity)->create($attributes);
+
 }
 
-function make($class, $attributes=[])
+function make($class, int $quantity = 1, array $attributes=[])
 {
-    return factory($class)->make($attributes);
+    return $quantity <= 1 ?
+        factory($class)->make($attributes) :
+        factory($class, $quantity)->make($attributes);
 }

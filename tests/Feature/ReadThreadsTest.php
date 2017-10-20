@@ -22,7 +22,7 @@ class ReadThreadsTest extends TestCase
      * Override setUp parent method
      * Executed every time a test runs
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -30,7 +30,7 @@ class ReadThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_view_all_threads()
+    public function a_user_can_view_all_threads(): void
     {
         $response = $this->get(route('threads'));
 
@@ -41,15 +41,15 @@ class ReadThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_read_a_single_thread()
+    public function a_user_can_read_a_single_thread(): void
     {
         //Test if user can access thread
-        $response = $this->get(route('show_thread', $this->thread->id));
+        $response = $this->get($this->thread->path());
         $response->assertSee($this->thread->title);
     }
 
     /** @test */
-    public function a_user_can_read_replies_that_are_associated_with_a_thread()
+    public function a_user_can_read_replies_that_are_associated_with_a_thread(): void
     {
         //Thread includes replies
         $reply = factory(Reply::class)->create([
@@ -57,7 +57,7 @@ class ReadThreadsTest extends TestCase
         ]);
 
         //When we visit a thread page
-        $response = $this->get(route('show_thread', $this->thread->id));
+        $response = $this->get($this->thread->path());
 
         //Then we should see the replies
         $response->assertSee($reply->body);

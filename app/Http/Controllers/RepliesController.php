@@ -2,13 +2,21 @@
 
 use App\Reply;
 use App\Thread;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Class RepliesController
+ * @package App\Http\Controllers
+ */
 class RepliesController extends Controller
 {
+    /**
+     * RepliesController constructor.
+     */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['index', 'show']);
     }
 
     /**
@@ -34,10 +42,16 @@ class RepliesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @param string $channel
+     * @param \App\Thread $thread
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Thread $thread)
+    public function store(string $channel, Thread $thread): RedirectResponse
     {
+        $this->validate(request(), [
+            'body' => 'required'
+        ]);
+
         $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->id()

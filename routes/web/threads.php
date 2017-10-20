@@ -1,21 +1,26 @@
 <?php
 
 Route::get('/threads', [
-    'as' => 'threads',
-    'uses' => 'ThreadsController@index'
+    'as'   => 'threads',
+    'uses' => 'ThreadsController@index',
 ]);
 
 Route::post('/threads', [
-    'as' => 'store_thread',
-    'uses' => 'ThreadsController@store'
+    'as'   => 'store_thread',
+    'uses' => 'ThreadsController@store',
 ]);
 
-Route::get('/threads/{thread}', [
-    'as' => 'show_thread',
-    'uses' => 'ThreadsController@show'
+Route::get('/threads/create', [
+    'as'   => 'create_thread',
+    'uses' => 'ThreadsController@create',
 ]);
 
-Route::post('/threads/{thread}/replies', [
-    'as' => 'store_reply',
-    'uses' => 'RepliesController@store'
+Route::get('/threads/{channel}/{thread}', [
+    'as'   => 'show_thread',
+    'uses' => 'ThreadsController@show',
+]);
+
+Route::post('/threads/{channel}/{thread}/replies', [
+    'as'   => 'store_reply',
+    'uses' => 'RepliesController@store',
 ]);

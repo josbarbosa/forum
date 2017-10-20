@@ -48,18 +48,11 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Exception $exception
-     * @return \Illuminate\Http\Response
-     * @throws Exception
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
      */
     public function render($request, Exception $exception)
     {
-        // When execute phpunit tests if route not exists
-        // the test will not fail, and it should
-        if(app()->environment() === 'testing')
-        {
-            throw $exception;
-        }
-
         return parent::render($request, $exception);
     }
 }

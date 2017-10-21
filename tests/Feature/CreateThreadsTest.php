@@ -6,6 +6,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
 
+/**
+ * Class CreateThreadsTest
+ * @package Tests\Feature
+ */
 class CreateThreadsTest extends TestCase
 {
     use DatabaseTransactions;
@@ -72,6 +76,10 @@ class CreateThreadsTest extends TestCase
             ->assertSessionHasErrors('channel_id');
     }
 
+    /**
+     * @param array $overrides
+     * @return TestResponse
+     */
     public function publishThread(array $overrides = []): TestResponse
     {
         // Sign in the User

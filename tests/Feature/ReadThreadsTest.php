@@ -1,7 +1,9 @@
 <?php namespace Tests\Feature;
 
+use App\Channel;
 use App\Reply;
 use App\Thread;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
@@ -61,5 +63,47 @@ class ReadThreadsTest extends TestCase
 
         //Then we should see the replies
         $response->assertSee($reply->body);
+    }
+
+    /** @test */
+    public function a_user_can_filter_threads_according_to_a_channel(): void
+    {
+        // Give a channel
+        $channel = create(Channel::class);
+
+        // Get Thread that are linked to a specifig channel
+        $threadInChannel = create(Thread::class, 1, [
+            'channel_id' => $channel->id,
+        ]);
+
+        // Get Thread that are not linked to a given channel
+        $threadNotInChannel = create(Thread::class);
+
+        // Get page and make assertions
+        $this->get(route('channel_threads', [
+                'channel' => $channel->slug,
+            ])
+        )
+            ->assertSee($threadInChannel->title)
+            ->assertDontSee($threadNotInChannel->title);
+    }
+
+    /** @test */
+    public function a_user_can_filter_threads_by_any_username(): void
+    {
+        $this->signIn(create(User::class, 1, [
+            'name' => 'JohnDoe',
+        ]));
+
+        $threadByJohn = create(Thread::class, 1, [
+            'user_id' => auth()->id(),
+        ]);
+
+        $otherNotByJohn = create(Thread::class);
+
+        $this->get('threads?by=JohnDoe')
+            ->assertSee($threadByJohn->title)
+            ->assertDontSee($otherNotByJohn->title);
+
     }
 }

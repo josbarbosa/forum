@@ -7,6 +7,10 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
+/**
+ * Class ParticipateInForumTest
+ * @package Tests\Feature
+ */
 class ParticipateInForumTest extends TestCase
 {
     use DatabaseTransactions;
@@ -42,7 +46,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    public function a_reply_requires_a_body()
+    public function a_reply_requires_a_body(): void
     {
         $this->signIn();
 

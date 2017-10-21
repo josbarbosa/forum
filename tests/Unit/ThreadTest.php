@@ -20,7 +20,7 @@ class ThreadTest extends TestCase
      */
     protected $thread;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -32,34 +32,34 @@ class ThreadTest extends TestCase
     {
         $thread = create(Thread::class);
 
-        $this->assertEquals('/threads/'.$thread->channel->slug.'/'.$thread->id, $thread->path());
+        $this->assertEquals('/threads/' . $thread->channel->slug . '/' . $thread->id, $thread->path());
     }
 
     /** @teste */
-    public function a_thread_has_replies() : void
+    public function a_thread_has_replies(): void
     {
         $this->assertInstanceOf(Collection::class, $this->thread->replies);
     }
 
     /** @test */
-    public function a_thread_has_a_creator() : void
+    public function a_thread_has_a_creator(): void
     {
         $this->assertInstanceOf(User::class, $this->thread->creator);
     }
 
     /** @test */
-    public function a_thread_can_add_a_reply() : void
+    public function a_thread_can_add_a_reply(): void
     {
         $this->thread->addReply([
-            'body' => 'Foobar',
-            'user_id' => 1
+            'body'    => 'Foobar',
+            'user_id' => 1,
         ]);
 
         $this->assertCount(1, $this->thread->replies);
     }
 
     /** @test */
-    public function a_thread_belongs_to_a_channel()
+    public function a_thread_belongs_to_a_channel(): void
     {
         $this->assertInstanceOf(Channel::class, $this->thread->channel);
     }

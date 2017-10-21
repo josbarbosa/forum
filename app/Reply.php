@@ -3,9 +3,17 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class Reply
+ * @package App
+ */
 class Reply extends Model
 {
+    /**
+     * @var array
+     */
     protected $guarded = [];
+
     /**
      * @return BelongsTo
      * When the method name is not expected by laravel

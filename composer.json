@@ -11,6 +11,7 @@
         "laravel/tinker": "~1.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.1",
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
@@ -48,10 +49,16 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
         ],
-        "test" : [
+        "phpdbg" : [
             "@test-migrate",
             "@test-seed",
             "phpdbg -qrr ./vendor/bin/phpunit --colors=always $PHPUNIT_OPTIONS",
+            "@test-rollback"
+        ],
+        "test" : [
+            "@test-migrate",
+            "@test-seed",
+            "vendor/bin/phpunit --colors=always $PHPUNIT_OPTIONS",
             "@test-rollback"
         ],
         "test-migrate": "@php artisan migrate:refresh --database=mysql_test --env=testing",

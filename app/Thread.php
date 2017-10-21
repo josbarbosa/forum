@@ -1,5 +1,7 @@
 <?php namespace App;
 
+use App\Filters\ThreadFilters;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,9 +36,9 @@ class Thread extends Model
     }
 
     /**
-     * @param Reply $reply
+     * @param array $reply
      */
-    public function addReply(Reply $reply): void
+    public function addReply(array $reply): void
     {
         $this->replies()->create($reply);
     }
@@ -55,5 +57,15 @@ class Thread extends Model
     public function path(): string
     {
         return "/threads/{$this->channel->slug}/{$this->id}";
+    }
+
+    /**
+     * @param Builder $query
+     * @param ThreadFilters $filters
+     * @return Builder
+     */
+    public function scopefilter(Builder $query, ThreadFilters $filters): Builder
+    {
+        return $filters->apply($query);
     }
 }

@@ -15,6 +15,11 @@ Route::get('/threads/create', [
     'uses' => 'ThreadsController@create',
 ]);
 
+Route::get('/threads/{channel}', [
+    'as'   => 'channel_threads',
+    'uses' => 'ThreadsController@index',
+]);
+
 Route::get('/threads/{channel}/{thread}', [
     'as'   => 'show_thread',
     'uses' => 'ThreadsController@show',

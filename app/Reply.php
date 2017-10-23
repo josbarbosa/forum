@@ -1,5 +1,6 @@
 <?php namespace App;
 
+use App\Http\Traits\Favoritable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -9,10 +10,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Reply extends Model
 {
+    use Favoritable;
+
     /**
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * Eager load owner relationship
+     * @var array
+     */
+    protected $with = ['owner', 'favorites'];
 
     /**
      * @return BelongsTo

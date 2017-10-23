@@ -18,11 +18,38 @@ class Thread extends Model
     protected $guarded = [];
 
     /**
+     * Eager load relationships
+     * @var array
+     */
+    protected $with = ['creator', 'channel'];
+
+    /**
+     * Add replies count to the global scope
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function ($builder) {
+            $builder->withCount('replies');
+        });
+    }
+
+    /**
      * @return HasMany
      */
     public function replies(): HasMany
     {
-        return $this->hasMany(Reply::class);
+        return $this
+            ->hasMany(Reply::class);
+    }
+
+    /**
+     * @return int
+     */
+    public function getReplyCountAttribute(): int
+    {
+        return $this->replies()->count();
     }
 
     /**

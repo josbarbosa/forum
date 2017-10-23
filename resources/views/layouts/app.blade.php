@@ -51,6 +51,7 @@
                                         </a>
                                     </li>
                                 @endif
+                                <li><a href="/threads?popular=1">Popular Threads</a></li>
                             </ul>
                         </li>
                         <li>

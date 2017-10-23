@@ -14,7 +14,7 @@ class ChannelTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function a_channel_consists_of_threads(): void
+    function a_channel_consists_of_threads(): void
     {
         $channel = create(Channel::class);
 

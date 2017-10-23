@@ -79,7 +79,12 @@ class ThreadsController extends Controller
      */
     public function show(string $channel, Thread $thread): View
     {
-        return view('threads.show', compact('thread'));
+        return view('threads.show', [
+            'thread'  => $thread,
+            'replies' => $thread
+                ->replies()
+                ->paginate(getItemsPerPage('replies')),
+        ]);
     }
 
     /**
@@ -123,13 +128,12 @@ class ThreadsController extends Controller
      */
     protected function getThreads(Channel $channel, ThreadFilters $filters): Collection
     {
-        $threads = Thread::latest()->filter($filters);
+        $threads = Thread::filter($filters)->latest();
 
         if ($channel->exists) {
             $threads->where('channel_id', $channel->id);
         }
 
-        /** eager load the channel records to avoid multiple relationship query calls when path method is invoked */
-        return $threads->with('channel')->get();
+        return $threads->get();
     }
 }

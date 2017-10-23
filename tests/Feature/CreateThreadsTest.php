@@ -15,7 +15,7 @@ class CreateThreadsTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function guests_may_not_create_threads(): void
+    function guests_may_not_create_threads(): void
     {
         $this->get('/threads/create')
             ->assertRedirect('/login');
@@ -25,7 +25,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_can_create_new_forum_threads(): void
+    function an_authenticated_user_can_create_new_forum_threads(): void
     {
         // Given a signed in user
         $this->signIn();
@@ -43,7 +43,7 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_can_access_create_thread_page(): void
+    function an_authenticated_user_can_access_create_thread_page(): void
     {
         // Given a signed in user
         $this->signIn();
@@ -54,21 +54,21 @@ class CreateThreadsTest extends TestCase
     }
 
     /** @test */
-    public function a_thread_requires_a_title(): void
+    function a_thread_requires_a_title(): void
     {
         $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
     }
 
     /** @test */
-    public function a_thread_requires_a_body(): void
+    function a_thread_requires_a_body(): void
     {
         $this->publishThread(['body' => null])
             ->assertSessionHasErrors('body');
     }
 
     /** @test */
-    public function a_thread_requires_a_valid_channel(): void
+    function a_thread_requires_a_valid_channel(): void
     {
         create(Channel::class, 2);
 
@@ -80,7 +80,7 @@ class CreateThreadsTest extends TestCase
      * @param array $overrides
      * @return TestResponse
      */
-    public function publishThread(array $overrides = []): TestResponse
+    function publishThread(array $overrides = []): TestResponse
     {
         // Sign in the User
         $this->signIn();

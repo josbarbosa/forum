@@ -14,7 +14,7 @@ class ReplyTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function it_has_an_owner(): void
+    function it_has_an_owner(): void
     {
         //Create a Reply
         $reply = factory(Reply::class)->create();

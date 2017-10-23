@@ -16,7 +16,7 @@ class ParticipateInForumTest extends TestCase
     use DatabaseTransactions;
 
     /** @test */
-    public function unauthenticated_users_may_not_add_replies(): void
+    function unauthenticated_users_may_not_add_replies(): void
     {
         $this->withoutExceptionHandling();
         $this->expectException(AuthenticationException::class);
@@ -25,7 +25,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    public function an_authenticated_user_may_participate_in_forum_threads(): void
+    function an_authenticated_user_may_participate_in_forum_threads(): void
     {
         // Given we have a authenticated user
         $this->be($user = factory(User::class)->create());
@@ -46,7 +46,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    public function a_reply_requires_a_body(): void
+    function a_reply_requires_a_body(): void
     {
         $this->signIn();
 

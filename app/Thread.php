@@ -45,14 +45,6 @@ class Thread extends Model
     }
 
     /**
-     * @return int
-     */
-    public function getReplyCountAttribute(): int
-    {
-        return $this->replies()->count();
-    }
-
-    /**
      * @return BelongsTo
      * Laravel by default will look for a creator id
      * We need to specify the foreign key column

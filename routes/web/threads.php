@@ -25,6 +25,11 @@ Route::get('/threads/{channel}/{thread}', [
     'uses' => 'ThreadsController@show',
 ]);
 
+Route::delete('/threads/{channel}/{thread}', [
+    'as'   => 'delete_thread',
+    'uses' => 'ThreadsController@destroy',
+]);
+
 Route::post('/threads/{channel}/{thread}/replies', [
     'as'   => 'store_reply',
     'uses' => 'RepliesController@store',

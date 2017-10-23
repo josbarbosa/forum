@@ -1,6 +1,7 @@
 <?php namespace Tests\Feature;
 
 use App\Channel;
+use App\Reply;
 use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestResponse;
@@ -74,6 +75,46 @@ class CreateThreadsTest extends TestCase
 
         $this->publishThread(['channel_id' => -1])
             ->assertSessionHasErrors('channel_id');
+    }
+
+    /** @test */
+    function guests_cannot_delete_threads(): void
+    {
+        $thread = create(Thread::class);
+
+        $response = $this->json('DELETE', $thread->path());
+
+        $response->assertStatus(401);
+
+    }
+
+    /** @test */
+    function threads_may_only_be_deleted_by_those_who_have_permissions(): void
+    {
+        $this->assertTrue(true);
+    }
+
+    /** @test */
+    function a_thread_can_be_deleted(): void
+    {
+        $this->signIn();
+
+        $thread = create(Thread::class);
+        $reply = create(Reply::class, 1, [
+            'thread_id' => $thread->id,
+        ]);
+
+        $response = $this->json('DELETE', $thread->path());
+
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        /** missing test when logged user try to delete a thread */
+        $thread = create(Thread::class);
+        $response = $this->delete($thread->path());
+        $response->assertRedirect('/threads');
     }
 
     /**

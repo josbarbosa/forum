@@ -18,6 +18,8 @@
     <div id="app">
         @include('layouts.nav')
         @yield('content')
+
+        <flash message="{{ session('flash') }}"></flash>
     </div>
 
     <!-- Scripts -->

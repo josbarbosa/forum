@@ -49,21 +49,21 @@ class RepliesController extends Controller
     public function store(string $channel, Thread $thread): RedirectResponse
     {
         $this->validate(request(), [
-            'body' => 'required'
+            'body' => 'required',
         ]);
 
         $thread->addReply([
-            'body' => request('body'),
-            'user_id' => auth()->id()
+            'body'    => request('body'),
+            'user_id' => auth()->id(),
         ]);
 
-        return back();
+        return back()->with('flash', 'Your reply has been left.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Reply  $reply
+     * @param  \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function show(Reply $reply)
@@ -74,7 +74,7 @@ class RepliesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Reply  $reply
+     * @param  \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function edit(Reply $reply)
@@ -85,8 +85,8 @@ class RepliesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Reply  $reply
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Reply $reply)
@@ -97,7 +97,7 @@ class RepliesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Reply  $reply
+     * @param  \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
     public function destroy(Reply $reply)

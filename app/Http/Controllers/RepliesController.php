@@ -102,6 +102,12 @@ class RepliesController extends Controller
      */
     public function destroy(Reply $reply)
     {
-        //
+        $this->authorize('update', $reply);
+
+        \DB::transaction(function () use ($reply) {
+            $reply->delete();
+        });
+
+        return back();
     }
 }

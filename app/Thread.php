@@ -1,10 +1,13 @@
 <?php namespace App;
 
 use App\Filters\ThreadFilters;
+use App\Http\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\App;
+use PhpParser\ErrorHandler\Throwing;
 
 /**
  * Class Thread
@@ -12,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Thread extends Model
 {
+    use RecordsActivity;
     /**
      * @var array
      */
@@ -24,7 +28,7 @@ class Thread extends Model
     protected $with = ['creator', 'channel'];
 
     /**
-     * Add replies count to the global scope
+     * Executed every time we call Thread Model
      */
     protected static function boot(): void
     {
@@ -32,6 +36,10 @@ class Thread extends Model
 
         static::addGlobalScope('replyCount', function ($builder) {
             $builder->withCount('replies');
+        });
+
+        static::deleting(function ($thread) {
+            $thread->replies->each->delete();
         });
     }
 

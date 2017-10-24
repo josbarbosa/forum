@@ -11,6 +11,6 @@ return [
         'perpage' => 10,
     ],
     'profiles' => [
-        'perpage' => 30,
+        'perpage' => 50,
     ],
 ];

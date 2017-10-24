@@ -107,6 +107,15 @@ class CreateThreadsTest extends TestCase
 
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertDatabaseMissing('activities', [
+            'subject_id'   => $thread->id,
+            'subject_type' => get_class($thread),
+        ]);
+
+        $this->assertDatabaseMissing('activities', [
+            'subject_id'   => $reply->id,
+            'subject_type' => get_class($reply),
+        ]);
 
         /** missing test when logged user try to delete a thread */
         $thread = create(Thread::class, 1, [

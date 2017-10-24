@@ -121,7 +121,9 @@ class ThreadsController extends Controller
     {
         $this->authorize('update', $thread);
 
-        $thread->delete();
+        \DB::transaction(function () use ($thread) {
+            $thread->delete();
+        });
 
         if (request()->wantsJson()) {
             return response([], 204);

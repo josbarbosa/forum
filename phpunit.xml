@@ -35,4 +35,7 @@
              lowUpperBound="50" highLowerBound="80"/>
         <log type="testdox-html" target="./log/testdox.html" />
     </logging>
+    <listeners>
+        <listener class="NunoMaduro\Collision\Adapters\Phpunit\Listener" />
+    </listeners>
 </phpunit>

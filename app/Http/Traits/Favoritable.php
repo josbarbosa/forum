@@ -1,7 +1,6 @@
 <?php namespace App\Http\Traits;
 
 use App\Favorite;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
@@ -20,9 +19,9 @@ trait Favoritable
     }
 
     /**
-     * @return Model
+     * @return mixed
      */
-    public function favorite(): Model
+    public function favorite()
     {
         $attributes = ['user_id' => auth()->id()];
         if (!$this->favorites()->where($attributes)->exists()) {

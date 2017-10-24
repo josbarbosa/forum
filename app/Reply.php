@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use App\Http\Traits\Favoritable;
+use App\Http\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Reply extends Model
 {
-    use Favoritable;
+    use Favoritable, RecordsActivity;
 
     /**
      * @var array
@@ -31,5 +32,13 @@ class Reply extends Model
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function thread(): BelongsTo
+    {
+        return $this->belongsTo(Thread::class);
     }
 }

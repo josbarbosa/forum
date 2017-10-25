@@ -89,4 +89,38 @@ class ParticipateInForumTest extends TestCase
         ]);
 
     }
+
+    /** @test */
+    function authorized_users_can_update_replies()
+    {
+        $this->signIn();
+
+        $reply = create(Reply::class, 1, [
+            'user_id' => auth()->id(),
+        ]);
+
+        $updateReply = 'You been changed, fool.';
+        $this->patch(route('patch_reply', $reply->id), [
+            'body' => $updateReply,
+        ]);
+
+        $this->assertDatabaseHas('replies', [
+            'id'   => $reply->id,
+            'body' => $updateReply,
+        ]);
+    }
+
+    /** @test */
+    function unauthorized_users_cannot_update_replies()
+    {
+        $reply = create(Reply::class);
+
+        $this->patch(route('patch_reply', $reply->id))
+            ->assertRedirect(route('login'));
+
+        $this->signIn();
+
+        $this->patch(route('patch_reply', $reply->id))
+            ->assertStatus(403);
+    }
 }

@@ -85,13 +85,14 @@ class RepliesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
      * @param  \App\Reply $reply
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Reply $reply)
+    public function update(Reply $reply)
     {
-        //
+        $this->authorize('update', $reply);
+
+        $reply->update(request(['body']));
     }
 
     /**
@@ -107,6 +108,10 @@ class RepliesController extends Controller
         \DB::transaction(function () use ($reply) {
             $reply->delete();
         });
+
+        if (request()->expectsJson()) {
+            return response(['status' => 'Reply deleted'], 200);
+        }
 
         return back();
     }

@@ -25,6 +25,12 @@ class Reply extends Model
     protected $with = ['owner', 'favorites'];
 
     /**
+     * Add attributes to the eloquent model query
+     * @var array
+     */
+    protected $appends = ['favoritesCount', 'isFavorited'];
+
+    /**
      * @return BelongsTo
      * When the method name is not expected by laravel
      * We need to specify the foreignKey column manually

@@ -5,6 +5,11 @@ Route::post('/replies/{reply}/favorites', [
     'uses' => 'FavoritesController@store',
 ]);
 
+Route::delete('/replies/{reply}/favorites', [
+    'as'   => 'favorite_delete_reply',
+    'uses' => 'FavoritesController@destroy',
+]);
+
 Route::patch('/replies/{reply}', [
     'as'   => 'patch_reply',
     'uses' => 'RepliesController@update',

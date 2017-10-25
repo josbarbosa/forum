@@ -23,8 +23,20 @@ class FavoritesController extends Controller
      */
     public function store(Reply $reply)
     {
-        $reply->favorite();
+        \DB::transaction(function () use ($reply) {
+            $reply->favorite();
+        });
 
         return back();
+    }
+
+    /**
+     * @param Reply $reply
+     */
+    public function destroy(Reply $reply)
+    {
+        \DB::transaction(function () use ($reply) {
+            $reply->unfavorite();
+        });
     }
 }

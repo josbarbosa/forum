@@ -15,7 +15,7 @@
                 </h5>
                 @if(Auth::check())
                     <div>
-                        <favorite :reply="{{ $reply }}"></favorite>
+                        <favorite :data="{{ $reply }}"></favorite>
                     </div>
                 @endif
             </div>

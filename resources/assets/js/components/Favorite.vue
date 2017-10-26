@@ -7,11 +7,11 @@
 
 <script>
     export default {
-        props: ['reply'],
+        props: ['data'],
         data() {
             return {
-                count: this.reply.favoritesCount,
-                active: this.reply.isFavorited
+                count: this.data.favoritesCount,
+                active: this.data.isFavorited
             }
         },
         methods: {
@@ -34,7 +34,7 @@
                 return ['btn', this.active ? 'btn-primary' : 'btn-default'];
             },
             endpoint() {
-                return '/replies/' + this.reply.id + '/favorites';
+                return '/replies/' + this.data.id + '/favorites';
             }
         }
     }

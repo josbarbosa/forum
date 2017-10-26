@@ -13,16 +13,22 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/forum.css') }}" rel="stylesheet">
+    <script>
+        window.App = {!! json_encode([
+            'user' => Auth::user(),
+            'signedIn' => Auth::check()
+        ]) !!}
+    </script>
 </head>
 <body>
-    <div id="app">
-        @include('layouts.nav')
-        @yield('content')
+<div id="app">
+    @include('layouts.nav')
+    @yield('content')
 
-        <flash message="{{ session('flash') }}"></flash>
-    </div>
+    <flash message="{{ session('flash') }}"></flash>
+</div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

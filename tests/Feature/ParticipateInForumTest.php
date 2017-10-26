@@ -27,22 +27,20 @@ class ParticipateInForumTest extends TestCase
     /** @test */
     function an_authenticated_user_may_participate_in_forum_threads(): void
     {
-        // Given we have a authenticated user
+        /** Given we have a authenticated user */
         $this->be($user = factory(User::class)->create());
 
-        // And an existing thread
+        /** And an existing thread */
         $thread = factory(Thread::class)->create();
 
-        // When a user adds a reply to the thread
+        /** When a user adds a reply to the thread */
         $reply = factory(Reply::class)->create();
         $this->post($thread->path() . '/replies',
             $reply->toArray()
         );
 
-        // Then their reply should be visible on the page
-        $response = $this->get($thread->path());
-
-        $response->assertSee($reply->body);
+        $this->assertDatabaseHas('replies', ['body' => $reply->body]);
+        $this->assertEquals(1, $thread->fresh()->replies_count);
     }
 
     /** @test */
@@ -59,7 +57,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    function unauthorized_users_cannot_delete_replies()
+    function unauthorized_users_cannot_delete_replies(): void
     {
         $reply = create(Reply::class);
 
@@ -73,7 +71,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    function authorized_users_can_delete_replies()
+    function authorized_users_can_delete_replies(): void
     {
         $this->signIn();
 
@@ -88,10 +86,12 @@ class ParticipateInForumTest extends TestCase
             'id' => $reply->id,
         ]);
 
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
+
     }
 
     /** @test */
-    function authorized_users_can_update_replies()
+    function authorized_users_can_update_replies(): void
     {
         $this->signIn();
 
@@ -111,7 +111,7 @@ class ParticipateInForumTest extends TestCase
     }
 
     /** @test */
-    function unauthorized_users_cannot_update_replies()
+    function unauthorized_users_cannot_update_replies(): void
     {
         $reply = create(Reply::class);
 

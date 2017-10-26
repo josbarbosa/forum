@@ -31,6 +31,22 @@ class Reply extends Model
     protected $appends = ['favoritesCount', 'isFavorited'];
 
     /**
+     * Override boot method
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (self $reply) {
+            $reply->thread->increment('replies_count');
+        });
+
+        static::deleted(function (self $reply) {
+            $reply->thread->decrement('replies_count');
+        });
+    }
+
+    /**
      * @return BelongsTo
      * When the method name is not expected by laravel
      * We need to specify the foreignKey column manually

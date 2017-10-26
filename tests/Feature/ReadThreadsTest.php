@@ -52,39 +52,6 @@ class ReadThreadsTest extends TestCase
     }
 
     /** @test */
-    function a_user_can_read_a_single_thread_with_pagination_replies(): void
-    {
-        setItemsPerPage('replies', 1);
-
-        $replyOne = create(Reply::class, 1, [
-            'thread_id' => $this->thread->id,
-        ]);
-
-        $replyTwo = create(Reply::class, 1, [
-            'thread_id' => $this->thread->id,
-        ]);
-
-        $response = $this->get($this->thread->path());
-        $response->assertSee($replyOne->body);
-        $response->assertDontSee($replyTwo->body);
-    }
-
-    /** @test */
-    function a_user_can_read_replies_that_are_associated_with_a_thread(): void
-    {
-        /** Thread includes replies */
-        $reply = factory(Reply::class)->create([
-            'thread_id' => $this->thread->id,
-        ]);
-
-        /** When we visit a thread page */
-        $response = $this->get($this->thread->path());
-
-        /** Then we should see the replies */
-        $response->assertSee($reply->body);
-    }
-
-    /** @test */
     function a_user_can_filter_threads_according_to_a_channel(): void
     {
         /** Give a channel */
@@ -129,28 +96,19 @@ class ReadThreadsTest extends TestCase
     /** @test */
     function a_user_can_filter_threads_by_popularity(): void
     {
-        /** Given we have three threads With: 2 replies, 3 replies, and 0 replies, respectively */
-        $threadWithTwoReplies = create(Thread::class, 1, ['created_at' => new Carbon('-2 minute')]);
-        create(Reply::class, 2, ['thread_id' => $threadWithTwoReplies->id]);
+        $threadWithTwoReplies = create('App\Thread');
+        create('App\Reply', 2, ['thread_id' => $threadWithTwoReplies->id]);
 
-        $threadWithThreeReplies = create(Thread::class, 1, ['created_at' => new Carbon('-1 minute')]);
-        create(Reply::class, 3, ['thread_id' => $threadWithThreeReplies->id]);
+        $threadWithThreeReplies = create('App\Thread');
+        create('App\Reply', 3, ['thread_id' => $threadWithThreeReplies->id]);
 
-        /**
-         * On setUp method we already have a thread created
-         * $threadWithZeroReplies = $this->thread;
-         */
+        $response = $this->getJson('threads?popular=1')->json();
 
-        /** When I filter all threads by popularity */
-        $response = $this->getJson('threads?popular=1');
-
-        /** Then they should be returned from most replies to least */
-        $threadsFromResponse = $response->baseResponse->original->getData()['threads'];
-        $this->assertEquals([3, 2, 0], $threadsFromResponse->pluck('replies_count')->toArray());
+        $this->assertEquals([3, 2, 0], array_column($response['data'], 'replies_count'));
     }
 
     /** @test */
-    function a_user_can_request_all_replies_for_a_given_thread()
+    function a_user_can_request_all_replies_for_a_given_thread(): void
     {
         $thread = create(Thread::class);
         create(Reply::class, 2, [
@@ -164,5 +122,18 @@ class ReadThreadsTest extends TestCase
 
         $this->assertCount(1, $response['data']);
         $this->assertEquals(2, $response['total']);
+    }
+
+    /** @test */
+    function a_user_can_filter_threads_by_those_that_are_unanswered(): void
+    {
+        $thread = create(Thread::class);
+        create(Reply::class, 1, [
+            'thread_id' => $thread->id,
+        ]);
+
+        $response = $this->getJson('threads?unanswered=1')->json();
+
+        $this->assertCount(1, $response['data']);
     }
 }

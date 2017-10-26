@@ -5,10 +5,10 @@ return [
         'perpage' => 15,
     ],
     'threads' => [
-        'perpage' => 12,
+        'perpage' => 25,
     ],
     'replies' => [
-        'perpage' => 10,
+        'perpage' => 15,
     ],
     'profiles' => [
         'perpage' => 50,

@@ -27,11 +27,15 @@ class ThreadsController extends Controller
      *
      * @param Channel $channel
      * @param ThreadFilters $filters
-     * @return View
+     * @return \Illuminate\Contracts\View\Factory|Collection|View
      */
-    public function index(Channel $channel, ThreadFilters $filters): View
+    public function index(Channel $channel, ThreadFilters $filters)
     {
         $threads = $this->getThreads($channel, $filters);
+
+        if (request()->wantsJson()) {
+            return $threads;
+        }
 
         return view('threads.index', compact('threads'));
     }
@@ -131,9 +135,8 @@ class ThreadsController extends Controller
     /**
      * @param Channel $channel
      * @param ThreadFilters $filters
-     * @return Collection
      */
-    protected function getThreads(Channel $channel, ThreadFilters $filters): Collection
+    protected function getThreads(Channel $channel, ThreadFilters $filters)
     {
         $threads = Thread::filter($filters)->latest();
 
@@ -141,6 +144,6 @@ class ThreadsController extends Controller
             $threads->where('channel_id', $channel->id);
         }
 
-        return $threads->get();
+        return $threads->paginate(getItemsPerPage('threads'));
     }
 }

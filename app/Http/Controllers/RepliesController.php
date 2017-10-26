@@ -1,7 +1,9 @@
 <?php namespace App\Http\Controllers;
 
+use App\Channel;
 use App\Reply;
 use App\Thread;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -20,23 +22,13 @@ class RepliesController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param Channel $channel
+     * @param Thread $thread
+     * @return LengthAwarePaginator
      */
-    public function index()
+    public function index(Channel $channel, Thread $thread): LengthAwarePaginator
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $thread->replies()->paginate(getItemsPerPage('replies'));
     }
 
     /**
@@ -44,42 +36,24 @@ class RepliesController extends Controller
      *
      * @param string $channel
      * @param \App\Thread $thread
-     * @return \Illuminate\Http\RedirectResponse
+     * @return Reply|RedirectResponse
      */
-    public function store(string $channel, Thread $thread): RedirectResponse
+    public function store(string $channel, Thread $thread)
     {
         $this->validate(request(), [
             'body' => 'required',
         ]);
 
-        $thread->addReply([
+        $reply = $thread->addReply([
             'body'    => request('body'),
             'user_id' => auth()->id(),
         ]);
 
+        if (request()->expectsJson()) {
+            return $reply->load('owner');
+        }
+
         return back()->with('flash', 'Your reply has been left.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Reply $reply
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Reply $reply)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Reply $reply
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Reply $reply)
-    {
-        //
     }
 
     /**

@@ -30,6 +30,11 @@ Route::delete('/threads/{channel}/{thread}', [
     'uses' => 'ThreadsController@destroy',
 ]);
 
+Route::get('/threads/{channel}/{thread}/replies', [
+    'as'   => 'get_replies',
+    'uses' => 'RepliesController@index',
+]);
+
 Route::post('/threads/{channel}/{thread}/replies', [
     'as'   => 'store_reply',
     'uses' => 'RepliesController@store',

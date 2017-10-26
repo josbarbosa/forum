@@ -8,8 +8,7 @@
                     <span>
                         said
                     </span>
-                    <span>
-                        {{ data.created_at }}
+                    <span v-text="ago">
                     </span>
                 </h5>
                 <div v-if="signedIn">
@@ -36,6 +35,7 @@
 </template>
 <script>
     import Favorite from './Favorite.vue';
+    import moment from 'moment';
 
     export default {
         props: ['data'],
@@ -53,6 +53,9 @@
             },
             canUpdate() {
                 return this.authorize(user => this.data.user_id == user.id);
+            },
+            ago() {
+                return moment(this.data.created_at).fromNow();
             }
         },
         methods: {

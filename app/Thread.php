@@ -64,10 +64,11 @@ class Thread extends Model
 
     /**
      * @param array $reply
+     * @return Reply
      */
-    public function addReply(array $reply): void
+    public function addReply(array $reply): Reply
     {
-        $this->replies()->create($reply);
+        return $this->replies()->create($reply);
     }
 
     /**

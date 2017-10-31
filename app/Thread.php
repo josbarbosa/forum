@@ -1,13 +1,12 @@
 <?php namespace App;
 
+use App\Events\ThreadHasNewReply;
 use App\Filters\ThreadFilters;
 use App\Http\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\App;
-use PhpParser\ErrorHandler\Throwing;
 
 /**
  * Class Thread
@@ -28,12 +27,18 @@ class Thread extends Model
     protected $with = ['creator', 'channel'];
 
     /**
+     * @var array
+     */
+    protected $appends = ['isSubscribedTo'];
+
+    /**
      * Executed every time we call Thread Model
      */
     protected static function boot(): void
     {
         parent::boot();
 
+        /** deleting thread event */
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
         });
@@ -64,7 +69,12 @@ class Thread extends Model
      */
     public function addReply(array $reply): Reply
     {
-        return $this->replies()->create($reply);
+        $reply = $this->replies()->create($reply);
+
+        /** Prepare notifications for all subscribers */
+        event(new ThreadHasNewReply($this, $reply));
+
+        return $reply;
     }
 
     /**
@@ -91,5 +101,48 @@ class Thread extends Model
     public function scopefilter(Builder $query, ThreadFilters $filters): Builder
     {
         return $filters->apply($query);
+    }
+
+    /**
+     * @param int|null $userId
+     * @return ThreadSubscription
+     */
+    public function subscribe(int $userId = null): ThreadSubscription
+    {
+        $threadSubscription = new ThreadSubscription();
+        $threadSubscription->user_id = $userId ?? Auth()->id();
+        $threadSubscription->thread_id = $this->id;
+        $threadSubscription->save();
+
+        return $threadSubscription;
+    }
+
+    /**
+     * @param $userId
+     * @return bool
+     */
+    public function unsubscribe(int $userId = null): bool
+    {
+        return $this->subscriptions()
+            ->where('user_id', $userId ?: auth()->id())
+            ->delete();
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(ThreadSubscription::class);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsSubscribedToAttribute(): bool
+    {
+        return $this->subscriptions()
+            ->where('user_id', auth()->id())
+            ->exists();
     }
 }

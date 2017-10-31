@@ -41,6 +41,17 @@ class ParticipateInForumTest extends TestCase
 
         $this->assertDatabaseHas('replies', ['body' => $reply->body]);
         $this->assertEquals(1, $thread->fresh()->replies_count);
+
+        /** Post another reply by ajax */
+        $replyJson = factory(Reply::class)->create();
+        $response = $this->json('POST', $thread->path() . '/replies', [
+            'body' => $replyJson->body,
+        ]);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'body' => $replyJson->body,
+            ]);
     }
 
     /** @test */

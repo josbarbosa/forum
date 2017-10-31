@@ -18,6 +18,7 @@ class Favorite extends Model
     protected $guarded = [];
 
     /**
+     * Fetch the model that was favorited.
      * @return MorphTo
      */
     public function favorited(): MorphTo

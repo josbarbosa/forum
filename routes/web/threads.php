@@ -39,3 +39,13 @@ Route::post('/threads/{channel}/{thread}/replies', [
     'as'   => 'store_reply',
     'uses' => 'RepliesController@store',
 ]);
+
+Route::post('/threads/{channel}/{thread}/subscriptions', [
+    'as'   => 'subscription_thread',
+    'uses' => 'ThreadSubscriptionsController@store',
+])->middleware('auth');
+
+Route::delete('/threads/{channel}/{thread}/subscriptions', [
+    'as'   => 'subscription_delete_thread',
+    'uses' => 'ThreadSubscriptionsController@destroy',
+])->middleware('auth');

@@ -35,6 +35,7 @@ class FavoritesTest extends TestCase
 
         /** It should be recorded in the database */
         $this->assertCount(1, $reply->favorites);
+        $this->assertInstanceOf(Reply::class, $reply->favorites()->first()->favorited);
     }
 
     /** @test */
@@ -55,7 +56,7 @@ class FavoritesTest extends TestCase
     }
 
     /** @test */
-    function an_authenticated_user_can_unfavorite_a_reply()
+    function an_authenticated_user_can_unfavorite_a_reply(): void
     {
         $this->signIn();
 

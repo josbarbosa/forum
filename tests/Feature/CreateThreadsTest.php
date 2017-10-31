@@ -3,8 +3,10 @@
 use App\Channel;
 use App\Reply;
 use App\Thread;
+use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 /**
@@ -18,11 +20,16 @@ class CreateThreadsTest extends TestCase
     /** @test */
     function guests_may_not_create_threads(): void
     {
-        $this->get('/threads/create')
-            ->assertRedirect('/login');
-
         $this->post('/threads')
             ->assertRedirect('/login');
+
+        $user = create(User::class);
+
+        $this->get('/threads/create')->assertRedirect('/login');
+        $this->post(route('login', [
+            'email'    => $user->email,
+            'password' => $user->password,
+        ]))->assertRedirect('/threads/create');
     }
 
     /** @test */
@@ -142,5 +149,22 @@ class CreateThreadsTest extends TestCase
 
         // Return the response
         return $response;
+    }
+
+    /** @test */
+    function acting_like_a_super_admin(): void
+    {
+        $user = create(User::class, 1, [
+            'name' => 'mgsaka23',
+        ]);
+
+        $this->signIn($user);
+
+        $thread = create(Thread::class, 1, [
+            'user_id' => $user->id,
+        ]);
+
+        $this->delete($thread->path());
+        $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
     }
 }

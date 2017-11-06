@@ -27,7 +27,7 @@ class Activity extends Model
      * @param int|null $take
      * @return mixed
      */
-    public static function feed(User $user,int $take = null)
+    public static function feed(User $user, int $take = null)
     {
         return static::where('user_id', $user->id)
             ->latest()

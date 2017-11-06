@@ -1,0 +1,23 @@
+engines:
+  phpcodesniffer:
+    enabled: true
+    config:
+      standard: "PSR1,PSR2"
+    checks:
+      Generic Files LineLength TooLong:
+        enabled: false
+  duplication:
+    enabled: true
+    checks:
+      Similar code:
+        enabled: false
+      Identical code:
+        enabled: false
+  rubocop:
+    enabled: false
+  radon:
+    enabled: false
+  eslint:
+    enabled: false
+  phpmd:
+    enabled: false

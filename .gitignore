@@ -24,3 +24,5 @@ app.docker
 _ide_helper.php
 /coverage
 /log
+/build
+codeclimate.json

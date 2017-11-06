@@ -34,6 +34,7 @@
              yui="true" highlight="true"
              lowUpperBound="50" highLowerBound="80"/>
         <log type="testdox-html" target="./log/testdox.html" />
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
     <listeners>
         <listener class="NunoMaduro\Collision\Adapters\Phpunit\Listener" />

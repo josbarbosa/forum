@@ -2,7 +2,7 @@
 
 use App\Events\ThreadHasNewReply;
 use App\Filters\ThreadFilters;
-use App\Http\Traits\RecordsActivity;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

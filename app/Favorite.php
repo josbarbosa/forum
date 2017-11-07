@@ -1,6 +1,6 @@
 <?php namespace App;
 
-use App\Http\Traits\RecordsActivity;
+use App\Traits\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 

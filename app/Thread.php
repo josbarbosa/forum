@@ -109,10 +109,15 @@ class Thread extends Model
      */
     public function subscribe(int $userId = null): ThreadSubscription
     {
-        $threadSubscription = new ThreadSubscription();
-        $threadSubscription->user_id = $userId ?? Auth()->id();
-        $threadSubscription->thread_id = $this->id;
-        $threadSubscription->save();
+        $userId = $userId ?? Auth()->id();
+        $threadId = $this->id;
+        $threadAttributes = ['user_id' => $userId, 'thread_id' => $threadId];
+        if (!$threadSubscription = ThreadSubscription::where($threadAttributes)->first()) {
+            $threadSubscription = new ThreadSubscription();
+            $threadSubscription->user_id = $userId;
+            $threadSubscription->thread_id = $threadId;
+            $threadSubscription->save();
+        }
 
         return $threadSubscription;
     }

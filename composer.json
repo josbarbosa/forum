@@ -56,13 +56,11 @@
         ],
         "phpdbg" : [
             "@test-migrate",
-            "@test-seed",
             "phpdbg -qrr ./vendor/bin/phpunit --colors=always $PHPUNIT_OPTIONS",
             "@test-rollback"
         ],
         "test" : [
             "@test-migrate",
-            "@test-seed",
             "vendor/bin/phpunit --colors=always $PHPUNIT_OPTIONS",
             "@test-rollback"
         ],

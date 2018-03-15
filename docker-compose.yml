@@ -1,0 +1,45 @@
+version: '3'
+services:
+    web:
+        build:
+            context: .
+            dockerfile: .docker/nginx/Dockerfile
+        volumes:
+            - ./public:/var/www/forum/public:cached
+        ports:
+            - "8080:80"
+        links:
+            - app
+        container_name: forum_webserver
+    app:
+        build:
+            context: .
+            dockerfile: .docker/php/Dockerfile
+        volumes:
+            - ./:/var/www/forum:cached
+            - .docker/php/zz-xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - .docker/php/zz-php.ini:/usr/local/etc/php/php.ini
+        links:
+            - database
+        environment:
+            - "MAIL_DRIVER=${MAIL_DRIVER}"
+            - "MAIL_HOST=${MAIL_HOST}"
+            - "MAIL_PORT=${MAIL_PORT}"
+            - "FROM_ADDRESS=${FROM_ADDRESS}"
+            - "FROM_NAME=${FROM_NAME}"
+            - "MAIL_ENCRYPTION=${MAIL_ENCRYPTION}"
+            - "MAIL_USERNAME=${MAIL_USERNAME}"
+            - "MAIL_PASSWORD=${MAIL_PASSWORD}"
+        container_name: forum_app
+    database:
+        image: mysql:5.7.21
+        volumes:
+            - forum_data:/var/lib/mysql
+        environment:
+            - "MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}"
+            - "MYSQL_DATABASE=${DATABASE_NAME}"
+        ports:
+            - "33060:3306"
+        container_name: forum_database
+volumes:
+    forum_data:

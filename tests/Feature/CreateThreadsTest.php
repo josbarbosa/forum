@@ -6,7 +6,6 @@ use App\Thread;
 use App\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestResponse;
-use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 /**
